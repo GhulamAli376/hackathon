@@ -39,9 +39,15 @@ const OtpVerification = () => {
         return;
       }
 
-      
+      const updateObj = { otp: finalOtp, email };
+      const response = await axios.post(`${BASE_URL}${apiEndPoint.otpVerification}`, updateObj);
+
+      if (response.data.status) {
+        toast.success("Account Verified 🎉");
         navigate('/');
-     
+      } else {
+        toast.error(response.data.message || "OTP verification failed");
+      }
     } catch (error) {
       toast.error(error?.response?.data?.message || "OTP verification failed");
     } finally {
@@ -61,7 +67,7 @@ const OtpVerification = () => {
     } catch (error) {
       toast.error("Failed to resend OTP");
     }
-  };
+  }
 
   // Countdown
   useEffect(() => {

@@ -38,6 +38,7 @@ export const signUpController = async (req, res) => {
     // Save user in MongoDB
     const response = await userModel.create(userObj);
     console.log("User saved in MongoDB:", response);
+console.log(process.env.EMAIL, process.env.APP_PASSWORD)
 
     // Nodemailer setup
     const transporter = nodemailer.createTransport({
@@ -96,152 +97,152 @@ export const signUpController = async (req, res) => {
 };
 
 
-// export const loginController = async (req,res) => {
-//     const body = req.body
+export const loginController = async (req,res) => {
+    const body = req.body
 
-//     const user = await userModel.findOne({email:body.email})
-//     if (!user) {
-//       return  res.json({
-//             message:"INVALID EMAIL OR PASSWORD",
-//             data:null,
-//             status:false
-//         })
-//     }
-//     const userPassword = await bcrypt.compare(body.password,user.password)
-// if (!userPassword) {
-//      return  res.json({
-//             message:"INVALID EMAIL OR PASSWORrD",
-//             data:null,
-//             status:false
-//         })
-// }
+    const user = await userModel.findOne({email:body.email})
+    if (!user) {
+      return  res.json({
+            message:"INVALID EMAIL OR PASSWORD",
+            data:null,
+            status:false
+        })
+    }
+    const userPassword = await bcrypt.compare(body.password,user.password)
+if (!userPassword) {
+     return  res.json({
+            message:"INVALID EMAIL OR PASSWORrD",
+            data:null,
+            status:false
+        })
+}
 
-// const PRIVATE_KEY = process.env.jwtPrivateKey
-// const token =jwt.sign({id:user._id,email: user.email,
-//     type: user.type},PRIVATE_KEY,{
+const PRIVATE_KEY = process.env.jwtPrivateKey
+const token =jwt.sign({id:user._id,email: user.email,
+    type: user.type},PRIVATE_KEY,{
 
-// })
-// console.log("token",token)
-//     res.json({
-//         message:"USER LOGIN ",
-//         data:user,
-//         status:true,
-//         token
-//     })
-// }
+})
+console.log("token",token)
+    res.json({
+        message:"USER LOGIN ",
+        data:user,
+        status:true,
+        token
+    })
+}
 
-// export const otpVerification = async (req, res) => {
-//   try {
-//     const { email, otp } = req.body;
-//     console.log("OTP Body:", req.body);
+export const otpVerification = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    console.log("OTP Body:", req.body);
 
-//     const otpRecord = await otpModel.findOne({
-//       email,
-//       otp,
-//       isUsed: false,
-//     });
+    const otpRecord = await otpModel.findOne({
+      email,
+      otp,
+      isUsed: false,
+    });
 
-//     if (!otpRecord) {
-//       return res.status(400).json({
-//         message: "Invalid OTP",
-//         status: false,
-//       });
-//     }
+    if (!otpRecord) {
+      return res.status(400).json({
+        message: "Invalid OTP",
+        status: false,
+      });
+    }
 
-//     // ✅ Expiry check
-//     if (otpRecord.expiresAt < new Date()) {
-//       return res.status(400).json({
-//         message: "OTP has expired",
-//         status: false,
-//       });
-//     }
+    // ✅ Expiry check
+    if (otpRecord.expiresAt < new Date()) {
+      return res.status(400).json({
+        message: "OTP has expired",
+        status: false,
+      });
+    }
 
-//     // ✅ Mark as used
-//     otpRecord.isUsed = true;
-//     await otpRecord.save();
+    // ✅ Mark as used
+    otpRecord.isUsed = true;
+    await otpRecord.save();
 
-//     // ✅ Update user verification
-//     await userModel.findOneAndUpdate(
-//       { email },
-//       { isVerified: true }
-//     );
+    // ✅ Update user verification
+    await userModel.findOneAndUpdate(
+      { email },
+      { isVerified: true }
+    );
 
-//     return res.json({
-//       message: "Account verified",
-//       status: true,
-//     });
+    return res.json({
+      message: "Account verified",
+      status: true,
+    });
 
-//   } catch (error) {
-//     console.error("OTP verification error:", error);
-//     res.status(500).json({
-//       message: error.message,
-//       status: false,
-//     });
-//   }
-// };
+  } catch (error) {
+    console.error("OTP verification error:", error);
+    res.status(500).json({
+      message: error.message,
+      status: false,
+    });
+  }
+};
 
 
-// export const resendOtp = async (req, res) => {
-//   try {
-//     const { email } = req.body;
-//     console.log("email", email);
+export const resendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    console.log("email", email);
 
-//     const userObj = await otpModel.findOne({ email });
+    const userObj = await otpModel.findOne({ email });
 
-//     if (!userObj) {
-//       return res.status(404).json({
-//         status: false,
-//         message: "User not found"
-//       });
-//     }
+    if (!userObj) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found"
+      });
+    }
 
-//     // Expire old unused OTPs
-//     await otpModel.updateMany({ email, isUsed: false }, { isUsed: true });
+    // Expire old unused OTPs
+    await otpModel.updateMany({ email, isUsed: false }, { isUsed: true });
 
-//     // Generate new OTP
-//     const otp = Math.floor(100000 + Math.random() * 900000);
-//     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+    // Generate new OTP
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
 
-//     // Send email
-//     const transporter = nodemailer.createTransport({
-//       service: "Gmail",
-//       host: "smtp.gmail.com",
-//       port: 465,
-//       secure: true,
-//       auth: {
-//         user: process.env.EMAIL,
-//         pass: process.env.APP_PASSWORD,
-//       },
-//     });
+    // Send email
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.APP_PASSWORD,
+      },
+    });
 
-//     const mailOptions = {
-//       from: process.env.EMAIL,
-//       to: userObj.email,
-//       subject: "User Signup - OTP Resent",
-//       html: SignupEmailTemplate(userObj, otp),
-//     };
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: userObj.email,
+      subject: "User Signup - OTP Resent",
+      html: SignupEmailTemplate(userObj, otp),
+    };
 
-//     await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
 
-//     // Save new OTP
-//     await otpModel.create({
-//       email,
-//       otp,
-//       expiresAt,
-//       isUsed: false,
-//     });
+    // Save new OTP
+    await otpModel.create({
+      email,
+      otp,
+      expiresAt,
+      isUsed: false,
+    });
 
-//     return res.json({
-//       message: "OTP resent successfully",
-//       status: true,
-//     });
+    return res.json({
+      message: "OTP resent successfully",
+      status: true,
+    });
 
-//   } catch (error) {
-//     console.error("OTP resend error:", error);
-//     res.status(500).json({
-//       message: error.message,
-//       status: false,
-//     });
-//   }
-// };
+  } catch (error) {
+    console.error("OTP resend error:", error);
+    res.status(500).json({
+      message: error.message,
+      status: false,
+    });
+  }
+};
 

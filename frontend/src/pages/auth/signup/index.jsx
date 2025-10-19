@@ -46,11 +46,16 @@ const Signup = () => {
     },
   });
 
-  const onSubmit = async (obj) => {
+   const onSubmit = async (obj) => {
     setLoading(true);
     try {
+      const response = await axios.post(`${BASE_URL}${apiEndPoint.signUp}`, obj);
+      if (!response.data.status) throw new Error(response.data.message);
+
+      toast.success("Signup successful! Please verify OTP.");
       navigate('/otpVerification', { state: { email: obj.email } });
     } catch (error) {
+      toast.error(error?.response?.data?.message || error.message || "Signup failed!");
     } finally {
       setLoading(false);
     }

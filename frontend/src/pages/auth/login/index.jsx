@@ -42,10 +42,13 @@ const AnimatedLoginPage = () => {
 
   const onSubmit = async (obj) => {
     try {
+      const response = await axios.post(`${BASE_URL}${apiEndPoint.login}`, obj);
+      if (!response.data.status) throw response.data.message;
+
+      Cookie.set('token', response.data.token);
 
   navigate('/dashboard');
-
-
+   
     } catch (error) {
      toast.error(error?.response?.data?.message || "Login failed!");
     }
