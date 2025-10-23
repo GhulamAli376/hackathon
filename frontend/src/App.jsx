@@ -21,7 +21,7 @@ export default function App() {
       <Routes>
         {/* Public Routes */}
         <Route
-          path="/"
+          path="/login"
           element={
               <AnimatedLoginPage />
           }
@@ -44,7 +44,7 @@ export default function App() {
 
         
 <Route
-          path="/dashboard"
+          path="/"
           element={
               <Dashboard />
           }
@@ -63,6 +63,13 @@ export default function App() {
           path="/vitaltrends"
           element={
               <VitalTrends/>
+          }
+        />
+
+ <Route
+          path="/chatbot"
+          element={
+              <ChatBot/>
           }
         />
 

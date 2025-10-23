@@ -15,6 +15,7 @@ import { BASE_URL } from '../../../utilis';
 import apiEndPoint from '../../../constant/apiEndPoint';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
+import Lottie from 'lottie-react';
 
 const OtpVerification = () => {
   const OTP_LENGTH = 6;
@@ -29,7 +30,7 @@ const OtpVerification = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // OTP Verify
+  // Verify OTP
   const handleOtpVerification = async () => {
     try {
       setLoading(true);
@@ -67,20 +68,20 @@ const OtpVerification = () => {
     } catch (error) {
       toast.error("Failed to resend OTP");
     }
-  }
+  };
 
-  // Countdown
+  // Countdown Timer
   useEffect(() => {
     const countdown = setInterval(() => {
       setTimer((prev) => {
-        if (prev === 1) clearInterval(countdown);
+        if (prev <= 1) clearInterval(countdown);
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(countdown);
   }, []);
 
-  // Autofocus first input on mount
+  // Focus first input on load
   useEffect(() => {
     inputRefs.current[0]?.focus();
   }, []);
@@ -89,11 +90,9 @@ const OtpVerification = () => {
   const handleChange = (e, index) => {
     const value = e.target.value;
     if (isNaN(value)) return;
-
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
     setOtp(newOtp);
-
     if (value && index < OTP_LENGTH - 1) {
       inputRefs.current[index + 1].focus();
     }
@@ -115,7 +114,7 @@ const OtpVerification = () => {
     handleOtpVerification();
   };
 
-  // Resend button click
+  // Resend OTP button
   const handleResend = async () => {
     setOtp(Array(OTP_LENGTH).fill(''));
     setTimer(60);
@@ -129,9 +128,10 @@ const OtpVerification = () => {
       justifyContent="center"
       alignItems="center"
       sx={{
-        height: '97vh',
-        background:'linear-gradient(135deg, #E8F5E9, #FFFFFF)',
+        minHeight: '97vh',
+        background: 'linear-gradient(135deg, #fce4ec, #ffffff)',
         px: 2,
+        py: 4,
       }}
     >
       <Paper
@@ -139,42 +139,33 @@ const OtpVerification = () => {
         sx={{
           p: { xs: 3, sm: 5 },
           borderRadius: 4,
-          maxWidth: 380,
+          maxWidth: 400,
           width: '100%',
           bgcolor: 'white',
+          textAlign: 'center',
         }}
       >
+        
+
         <Typography
           variant={isSmallScreen ? 'h6' : 'h5'}
-          textAlign="center"
           fontWeight="bold"
+          color="error"
           gutterBottom
-          color="primary"
         >
-          Email Verification
+          Verify Your Email
         </Typography>
 
         <Typography
           variant="body2"
-          textAlign="center"
-          mb={4}
           color="text.secondary"
+          mb={4}
         >
-          Enter the 6-digit code sent to <strong>{email}</strong>.
+          We’ve sent a 6-digit verification code to <strong>{email}</strong>.
         </Typography>
 
-        {/* OTP Input Boxes */}
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          gap={isSmallScreen ? 1 : 2}
-          mb={3}
-          sx={{
-            overflowX: 'auto',
-            flexWrap: 'nowrap',
-          }}
-        >
+        {/* OTP Inputs */}
+        <Box display="flex" justifyContent="center" gap={isSmallScreen ? 1 : 1.5} mb={3}>
           {otp.map((value, index) => (
             <TextField
               key={index}
@@ -187,11 +178,11 @@ const OtpVerification = () => {
                 maxLength: 1,
                 style: {
                   textAlign: 'center',
-                  fontSize: isSmallScreen ? '18px' : '20px',
-                  width: isSmallScreen ? '40px' : '52px',
-                  height: isSmallScreen ? '44px' : '54px',
+                  fontSize: isSmallScreen ? '18px' : '22px',
+                  width: isSmallScreen ? '40px' : '50px',
+                  height: isSmallScreen ? '45px' : '55px',
                   borderRadius: '10px',
-                }
+                },
               }}
             />
           ))}
@@ -201,23 +192,30 @@ const OtpVerification = () => {
         <Button
           variant="contained"
           fullWidth
-          onClick={handleSubmit}
           size="large"
-          sx={{ mt: 2 }}
+          onClick={handleSubmit}
           disabled={otp.includes('') || loading}
+          sx={{
+            background: 'linear-gradient(90deg, #e53935, #b71c1c)',
+            color: 'white',
+            py: 1.2,
+            borderRadius: 2,
+            fontWeight: 'bold',
+            '&:hover': { background: 'linear-gradient(90deg, #b71c1c, #880e4f)' },
+          }}
         >
-          {loading ? <CircularProgress size={26} color="inherit" /> : "Verify"}
+          {loading ? <CircularProgress size={26} color="inherit" /> : 'Verify Account'}
         </Button>
 
-        {/* Resend OTP */}
-        <Typography variant="body2" textAlign="center" mt={3}>
+        {/* Timer / Resend */}
+        <Typography variant="body2" mt={3} color="text.secondary">
           {timer > 0 ? (
-            <>Resend OTP in <strong>{timer}s</strong></>
+            <>Didn’t receive the code? Resend in <strong>{timer}s</strong></>
           ) : (
             <Button
               onClick={handleResend}
               variant="text"
-              sx={{ textTransform: 'none', mt: 1 }}
+              sx={{ textTransform: 'none', color: '#d32f2f', fontWeight: 600 }}
             >
               Resend OTP
             </Button>

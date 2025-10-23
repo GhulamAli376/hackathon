@@ -3,11 +3,11 @@ export const SignupEmailTemplate = (user, otp) => {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Verify Your Foodie Account</title>
+  <title>Verify Your HealthMate Account</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #fdfcfb;
+      background-color: #f9fafb;
       margin: 0;
       padding: 0;
     }
@@ -15,69 +15,78 @@ export const SignupEmailTemplate = (user, otp) => {
       max-width: 600px;
       margin: 40px auto;
       background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       padding: 30px;
-      border: 1px solid #f0f0f0;
+      border: 1px solid #eaeaea;
     }
     .header {
       text-align: center;
-      padding-bottom: 20px;
+      padding-bottom: 15px;
     }
     .header img {
-      width: 60px;
+      width: 70px;
       margin-bottom: 10px;
     }
     .header h2 {
-      color: #e63946;
+      color: #d32f2f;
       margin: 0;
+      font-size: 22px;
+      letter-spacing: 0.5px;
     }
     .content {
       padding: 20px 0;
     }
     .content p {
-      font-size: 16px;
+      font-size: 15px;
       color: #444;
       line-height: 1.6;
     }
     .otp-box {
-      background-color: #ffe8e8;
-      color: #d62828;
-      font-size: 28px;
+      background-color: #fdecea;
+      color: #c62828;
+      font-size: 30px;
       font-weight: bold;
-      padding: 15px;
+      padding: 14px;
       text-align: center;
-      border-radius: 8px;
-      letter-spacing: 4px;
-      margin: 20px 0;
+      border-radius: 10px;
+      letter-spacing: 5px;
+      margin: 25px 0;
+      box-shadow: inset 0 0 5px rgba(211,47,47,0.2);
     }
     .footer {
       font-size: 12px;
-      color: #aaa;
+      color: #999;
       text-align: center;
       padding-top: 20px;
       border-top: 1px solid #eee;
+    }
+    .highlight {
+      color: #d32f2f;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="email-container">
     <div class="header">
-      <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Food Logo" />
-      <h2>Welcome to Foodie Express!</h2>
+      <img src="https://cdn-icons-png.flaticon.com/512/2966/2966488.png" alt="HealthMate Logo" />
+      <h2>Welcome to HealthMate ❤️‍🩹</h2>
     </div>
     <div class="content">
       <p>Hello <strong>${user.fullName}</strong>,</p>
-      <p>Thanks for joining <strong>Foodie Express</strong> 🍕🍔🍜</p>
-      <p>To complete your signup and start ordering your favorite meals, please verify your email:</p>
-      
+      <p>We’re excited to have you join <span class="highlight">HealthMate</span> — your smart companion for better health management.</p>
+      <p>To complete your signup and access personalized health features, please verify your email:</p>
+
       <div class="otp-box">${otp}</div>
 
       <p>This OTP is valid for <strong>10 minutes</strong>.</p>
-      <p>If you did not sign up for this account, please ignore this email.</p>
+      <p>If you did not create this account, you can safely ignore this message.</p>
     </div>
     <div class="footer">
-      &copy; ${new Date().getFullYear()} Foodie Express. All rights reserved.
+      &copy; ${new Date().getFullYear()} HealthMate. All rights reserved.  
+      <br />
+      <span style="color:#d32f2f;">“Your Health, Our Priority.”</span>
     </div>
   </div>
 </body>

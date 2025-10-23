@@ -1,13 +1,11 @@
 import multer from "multer";
 
-// Memory storage (file will be stored in RAM as a Buffer)
+// Store files in memory (you can later save them to disk or cloud)
 const storage = multer.memoryStorage();
 
 const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10 MB limit
-  },
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
 });
 
 export default upload;
